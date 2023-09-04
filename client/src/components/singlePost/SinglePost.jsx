@@ -1,27 +1,45 @@
-
-import "./singlePost.css"
+import { Link, useLocation } from 'react-router-dom'
+import { useEffect, useState } from 'react'
+import axios from 'axios'
+import './singlePost.css'
 
 export default function SinglePost() {
+  const location = useLocation()
+  const path = location.pathname.split('/')[2]
+  const [post, setPost] = useState({})
+  useEffect(() => {
+    const getPost = async () => {
+      const res = await axios.get('/posts/' + path)
+      setPost(res.data)
+    }
+    getPost()
+  }, [path])
   return (
     <div className="singlePost">
-        <div className="singlePostWrapper">
-            <img src="https://cdna.artstation.com/p/assets/images/images/053/417/540/large/dante-leapman-final-1.jpg?1662145194" alt="" className="singlePostImg" />
+      <div className="singlePostWrapper">
+        {post.photo && (
+          <img src={post.photo} alt="" className="singlePostImg" />
+        )}
+      </div>
+      <h1 className="singlePostTitle">
+        {post.title}
+        <div className="singlePostEdit">
+          <i class="fa-solid fa-pen-to-square"></i>
+          <i class="fa-solid fa-trash"></i>
         </div>
-        <h1 className="singlePostTitle">
-            Lorem, ipsum dolor.
-            <div className="singlePostEdit">
-            <i class="fa-solid fa-pen-to-square"></i>
-            <i class="fa-solid fa-trash"></i>
-            </div>
-        </h1>
-        <div className="singlePostInfo">
-          <span className="singlePostAuthor">Author: <b>Safak</b></span>
-          <span className="singlePostDate">Author: <b>1 hout ago</b></span>
-        </div>
-        <p className="singlePostDesc">
-          Lorem ipsum dolor sit amet consectetur adipisicing elit. Sapiente esse vel ea nostrum voluptate quod totam, voluptatibus quam eum reprehenderit, dolor odit dolore quidem ipsam illo quasi omnis consequatur praesentium officia est facere harum saepe eaque. Sapiente excepturi laborum temporibus?
-          Lorem ipsum dolor sit amet consectetur adipisicing elit. Magnam, nisi cupiditate? Earum ducimus reprehenderit mollitia culpa voluptatem adipisci dolor sequi, consectetur iusto repellendus est id maiores unde cupiditate vel rerum et ab voluptate reiciendis modi rem iste! Delectus mollitia officia autem numquam? Aspernatur amet ex iste eveniet, ullam aperiam adipisci.
-        </p>
+      </h1>
+      <div className="singlePostInfo">
+        <span className="singlePostAuthor">
+          Author:
+          <Link to={`/?user=${post.username}`} className="link">
+             <b>{post.username}</b>
+            </Link>
+        </span>
+        <span className="singlePostDate">
+          Author: <b>{new Date(post.createdAt).toDateString()}</b>
+        </span>
+      </div>
+      <p className="singlePostDesc">{post.desc}</p>
     </div>
   )
 }
