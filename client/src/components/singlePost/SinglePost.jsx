@@ -85,7 +85,7 @@ export default function SinglePost() {
             </Link>
           </span>
           <span className="singlePostDate">
-            Author: <b>{new Date(post.createdAt).toDateString()}</b>
+            <b>{new Date(post.createdAt).toDateString()}</b>
           </span>
         </div>
         {updateMode ? (
